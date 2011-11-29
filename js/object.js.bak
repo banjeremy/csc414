@@ -1,0 +1,19 @@
+object = function(url, id) {
+    var self = this;
+    
+    self.url = url;
+    self.mesh;
+
+    self.loadFromFile = function(id) {
+        var modelLoader = new THREE.JSONLoader();
+        var callbackLoadModel = function(geometry) {
+            avatars[id] = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial());
+            avatars[id].scale.set(0.05, 0.05, 0.05);
+            scene.addObject(avatars[id]);
+            THREE.Collisions.colliders.push(THREE.CollisionUtils.MeshColliderWBox(avatars[id]));
+        };
+
+        modelLoader.load( {model: self.url, callback: callbackLoadModel} );
+    };
+    self.loadFromFile(id);
+};

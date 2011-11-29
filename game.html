@@ -1,0 +1,150 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <title>three.js webgl - csc414</title>
+        <meta charset="utf-8">
+        <style type="text/css">
+            body {
+                /* background:#000; */
+                color:#fff;
+                padding:0px;
+                margin:0px;
+                overflow:hidden;
+                font-family:georgia;
+                text-align:center;
+            }
+	    #healthBox{
+		width: 502px;
+		height: 42px;
+		border: 1px solid #000;
+		border-radius: 5px;
+		background: transparent;
+		margin: 20px;
+		position: absolute;
+		top: 2px;
+		z-index: 2000
+	    }
+
+	    #healthBar{
+		width: 480px;
+		height: 20px;
+		border: 1px solid #910503;
+		background: #f00;
+		position: bottom left;
+		padding: 10px;
+	    }
+	   
+		#kdBox
+		{
+			width: 475px;
+			height: 15px;
+			border: 1px solid #6666CC;
+			border-radius: 5px;
+			background: #8099E6;
+			margin: 20px;
+			position: absolute;
+			top: 60px;
+			z-index: 2001;	
+		}
+		#kdBar
+		{
+			width: 0px; /* to be changed dynamically */
+			height: 100%;
+			border-radius: 5px;
+			background: #ff0;
+			position: top left;
+
+		}
+		#barText
+		{
+			text-align: center;
+			text-color: #000;
+		}
+        </style>
+    </head>
+
+    <body>
+        <audio id="player"></audio>
+	<script language="JavaScript" type="text/javascript">
+	var _body = document.getElementsByTagName('body') [0];
+    var _div = document.createElement('div');
+	_div.setAttribute('id','healthBox');
+	
+	var _div2 = document.createElement('div');
+	_div2.setAttribute('id', 'healthBar');
+	_div.appendChild(_div2);
+	_body.appendChild(_div);
+
+	var	_kdBox = document.createElement('div');
+	_kdBox.setAttribute('id','kdBox');
+	
+	var _kdBar = document.createElement('div');
+	_kdBar.setAttribute('id', 'kdBar');
+	_kdBox.appendChild(_kdBar);
+	_body.appendChild(_kdBox);
+	var _barText = document.createTextNode("Get 25 kills to win!");
+	var _barTextHolder = document.createElement('p');
+	_barTextHolder.setAttribute('id', 'holder');
+	_kdBox.appendChild(_barText);
+
+</script>
+        <script id="vertexShader" type="x-shader/x-vertex">
+            uniform float time;
+            varying vec2 vUv;
+
+            void main()
+            {
+                vUv = vec2( 3.0, 1.0 ) * uv;
+                vec3 pos2 = position;
+                pos2.y += 0.3*sin(time);
+                vec4 mvPosition = modelViewMatrix * vec4( pos2, 1.0 );
+                gl_Position = projectionMatrix * mvPosition;
+            }
+        </script>
+        <script id="fragmentShader" type="x-shader/x-vertex">
+            uniform float time;
+            uniform vec2 resolution;
+
+            uniform sampler2D texture2;
+
+            varying vec2 vUv;
+
+            void main( void ) {
+
+                vec2 position = -1.0 + 2.0 * vUv;
+
+                vec4 noise = texture2D( texture2, vUv );
+                vec2 T = vUv + vec2( -0.5, 2.0 ) * time * 0.01;
+
+                T.x -= noise.y * 0.2;
+                T.y += noise.z * 0.2;
+
+                vec4 color = texture2D( texture2, T * 2.0 );
+
+                gl_FragColor = color;
+            }
+        </script>
+        <script src="../three.js/build/Three.js"></script>
+        <script src="thirdParty/speak.js"></script>
+        <script src="thirdParty/socket.io.js"></script>
+        <script src="thirdParty/easyWebSocket-node.js"></script>
+        <script src="thirdParty/base64.js"></script>
+        <script src="js/tauntClient.js"></script>
+        <script src="js/networking.js"></script>
+        <script src="thirdParty/FirstPersonCamera.js"></script>
+        <script src="thirdParty/ImprovedNoise.js"></script>
+        <script src="thirdParty/Detector.js"></script>
+        <script src="thirdParty/RequestAnimationFrame.js"></script>
+        <script src="js/skybox.js"></script>
+        <script src="js/sound.js"></script>
+        <script src="js/weapons.js"></script>
+        <script src="physics/js/pmrpc.js"></script>
+        <script src="physics/js/physicsClient.js"></script>
+        <script src="js/terrain.js"></script>
+        <script src="js/animation.js"></script>
+        <script src="js/object.js"></script>
+		<script src="js/stats.js"></script>
+        <script src="js/game.js"></script>
+        <script src="js/listeners.js"></script>
+    </body>
+</html>
